@@ -3,9 +3,9 @@
 GET root
 
 * Creates new stories
-#storyID1:@id=POST root/stories?name=otaStory1&location=60.184884;24.834061&content=00000000000000000000000000000000000000000000000
-#storyID2:@id=POST root/stories?name=otaStory2&location=60.185140;24.826165&content=00000000000000000000000000000000000000000000000
-#storyID3:@id=POST root/stories?name=hesaStory1&location=60.170456;24.941264&content=00000000000000000000000000000000000000000000000
+#storyID1:@id=POST root/stories?name=otaStory1&location=60.184884;24.834061
+#storyID2:@id=POST root/stories?name=otaStory2&location=60.185140;24.826165
+#storyID3:@id=POST root/stories?name=hesaStory1&location=60.170456;24.941264
 
 * Finds out the stories near otaniemi
 GET root/stories/filtered/*?location=60.184884;24.834061

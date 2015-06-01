@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import vault_database.DatabaseAccessor;
 import vault_database.DatabaseUnavailableException;
+import vault_database.InvalidTableTypeException;
 import cos_db.CoSDatabaseTable;
 import cos_util.Location;
 import flow_recording.ObjectFormatException;
@@ -18,7 +20,6 @@ import nexus_http.MethodType;
 import nexus_rest.ImmutableRestData;
 import nexus_rest.RestEntity;
 import nexus_rest.RestEntityLinkList;
-import alliance_rest.DatabaseEntityTable;
 import alliance_rest.DatabaseTableEntity;
 
 /**
@@ -139,7 +140,7 @@ public class StoriesList extends DatabaseTableEntity
 		{
 			try
 			{
-				List<String> storyIDs = DatabaseEntityTable.findMatchingIDs(
+				List<String> storyIDs = DatabaseAccessor.findMatchingIDs(
 						CoSDatabaseTable.STORIES, new String[0], new String[0]);
 				
 				// Parses the filters from the parameters
@@ -169,7 +170,7 @@ public class StoriesList extends DatabaseTableEntity
 			{
 				throw new InvalidParametersException("Couldn't parse parameter: 'location'");
 			}
-			catch (DatabaseUnavailableException | SQLException e)
+			catch (DatabaseUnavailableException | SQLException | InvalidTableTypeException e)
 			{
 				throw new InternalServerException("Couldn't filter the stories", e);
 			}

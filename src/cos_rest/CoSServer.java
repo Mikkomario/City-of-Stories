@@ -83,7 +83,7 @@ public class CoSServer
 		
 		// Creates the entities
 		Map<String, String> rootStats = new HashMap<>();
-		rootStats.put("version", "0.0.1");
+		rootStats.put("version", "0.0.2");
 		rootStats.put("started", new SimpleDate().toString());
 		rootStats.put("author", "Mikko Hilpinen");
 		RestEntity root = new ImmutableRestEntity("root", null, rootStats);

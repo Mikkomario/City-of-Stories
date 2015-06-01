@@ -7,28 +7,23 @@ import java.util.Map;
 
 import vault_database.DatabaseTable;
 import vault_database.DatabaseUnavailableException;
-import alliance_rest.DatabaseEntityTable;
 
 /**
  * These are the database tables used for storing the basic entities introduced in this project
  * @author Mikko Hilpinen
  * @since 28.5.2015
  */
-public enum CoSDatabaseTable implements DatabaseEntityTable
+public enum CoSDatabaseTable implements DatabaseTable
 {
 	/**
 	 * This table holds basic story data
 	 */
-	STORIES,
-	/**
-	 * This table holds the sound files associated with each story
-	 */
-	SOUNDFILES;
+	STORIES;
 	
 	
 	// ATTRIBUTES	------------------------------------
 	
-	private static Map<CoSDatabaseTable, List<String>> columnNames = new HashMap<>();
+	private static Map<CoSDatabaseTable, List<ColumnInfo>> columnInfo = new HashMap<>();
 	
 	
 	// IMPLEMENTED METHODS	----------------------------
@@ -36,20 +31,7 @@ public enum CoSDatabaseTable implements DatabaseEntityTable
 	@Override
 	public List<String> getColumnNames()
 	{
-		if (!columnNames.containsKey(this))
-		{
-			try
-			{
-				columnNames.put(this, DatabaseTable.readColumnNamesFromDatabase(this));
-			}
-			catch (DatabaseUnavailableException | SQLException e)
-			{
-				System.err.println("Failed to read the column names");
-				e.printStackTrace();
-			}
-		}
-		
-		return columnNames.get(this);
+		return DatabaseTable.getColumnNamesFromColumnInfo(getColumnInfo());
 	}
 
 	@Override
@@ -67,24 +49,39 @@ public enum CoSDatabaseTable implements DatabaseEntityTable
 	@Override
 	public boolean usesAutoIncrementIndexing()
 	{
-		if (this == STORIES)
-			return true;
-		
-		return false;
+		return true;
 	}
 
 	@Override
-	public boolean usesIndexing()
+	public boolean usesIntegerIndexing()
 	{
 		return true;
 	}
 
 	@Override
-	public String getIDColumnName()
+	public String getPrimaryColumnName()
 	{
-		if (this == STORIES)
-			return "id";
+		return DatabaseTable.findPrimaryColumnInfo(getColumnInfo()).getColumnName();
+	}
+	
+	
+	// OTHER METHODS	-----------------------
+	
+	private List<ColumnInfo> getColumnInfo()
+	{
+		if (!columnInfo.containsKey(this))
+		{
+			try
+			{
+				columnInfo.put(this, DatabaseTable.readColumnInfoFromDatabase(this));
+			}
+			catch (DatabaseUnavailableException | SQLException e)
+			{
+				System.err.println("Can't read column info");
+				e.printStackTrace();
+			}
+		}
 		
-		return "storyID";
+		return columnInfo.get(this);
 	}
 }

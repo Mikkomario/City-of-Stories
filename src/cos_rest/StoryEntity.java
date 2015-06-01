@@ -6,7 +6,6 @@ import java.util.Map;
 import cos_db.CoSDatabaseTable;
 import cos_util.Location;
 import nexus_http.HttpException;
-import nexus_http.InvalidParametersException;
 import nexus_http.MethodNotSupportedException;
 import nexus_http.MethodType;
 import nexus_http.NotFoundException;
@@ -48,24 +47,11 @@ public class StoryEntity extends DatabaseEntity
 	public StoryEntity(RestEntity parent, Map<String, String> parameters) throws HttpException
 	{
 		super(new SimpleRestData(), parent, CoSDatabaseTable.STORIES, 
-				modifyParameters(parameters), new HashMap<>());
-		
-		// Also creates a new soundFile entity
-		new SoundFileEntity(this, parameters);
+				modifyParameters(parameters), getDefaultParameters(parameters));
 	}
 	
 	
 	// IMPLEMENTED METHODS	----------------------
-
-	@Override
-	protected void prepareDelete(Map<String, String> parameters)
-			throws HttpException
-	{
-		// Also deletes the soundFile
-		getSoundFile().delete();
-		
-		super.prepareDelete(parameters);
-	}
 	
 	@Override
 	public void Put(Map<String, String> parameters) throws HttpException
@@ -77,21 +63,13 @@ public class StoryEntity extends DatabaseEntity
 	protected Map<String, RestEntity> getMissingEntities(
 			Map<String, String> parameters) throws HttpException
 	{
-		// Each story has a linked soundFile
-		Map<String, RestEntity> links = new HashMap<>();
-		SoundFileEntity soundFile = getSoundFile();
-		links.put(soundFile.getName(), soundFile);
-		
-		return links;
+		return new HashMap<>();
 	}
 
 	@Override
 	protected RestEntity getMissingEntity(String pathPart,
 			Map<String, String> parameters) throws HttpException
 	{
-		if ("soundFile".equalsIgnoreCase(pathPart))
-			return getSoundFile();
-		
 		throw new NotFoundException(getPath() + "/" + pathPart);
 	}
 	
@@ -106,24 +84,22 @@ public class StoryEntity extends DatabaseEntity
 		return new Location(getAttributes().get("location"));
 	}
 	
-	private SoundFileEntity getSoundFile() throws HttpException
-	{
-		return new SoundFileEntity(getDatabaseID());
-	}
-	
 	
 	// OTHER METHODS	-------------------------
 	
-	private static Map<String, String> modifyParameters(Map<String, String> parameters) throws 
-			InvalidParametersException
-	{
-		// Checks that the "content" parameter has been provided
-		if (!parameters.containsKey("content"))
-			throw new InvalidParametersException("Parameter 'content' required");
-		
+	private static Map<String, String> modifyParameters(Map<String, String> parameters)
+	{	
 		// Adds parameter(s)
 		parameters.put("created", new SimpleDate().toString());
 		
 		return parameters;
+	}
+	
+	private static Map<String, String> getDefaultParameters(Map<String, String> userParameters)
+	{
+		Map<String, String> params = new HashMap<>();
+		params.put("fileName", userParameters.get("name") + ".mp3");
+		
+		return params;
 	}
 }

@@ -10,6 +10,7 @@ import vault_database.DatabaseAccessor;
 import vault_database.DatabaseUnavailableException;
 import vault_database.InvalidTableTypeException;
 import cos_db.CoSDatabaseTable;
+import cos_util.Duration;
 import cos_util.Location;
 import flow_recording.ObjectFormatException;
 import nexus_http.HttpException;
@@ -150,13 +151,17 @@ public class StoriesList extends DatabaseTableEntity
 				int radius = 1000;
 				if (this.parameters.containsKey("radius"))
 					radius = Integer.parseInt(this.parameters.get("radius"));
+				Duration maxDuration = null;
+				if (this.parameters.containsKey("maxDuration"))
+					maxDuration = new Duration(this.parameters.get("maxDuration"));
 				
 				// Goes through the stories and filters them
 				List<StoryEntity> filteredStories = new ArrayList<>();
 				for (String storyID : storyIDs)
 				{
 					StoryEntity story = new StoryEntity(storyID);
-					if (story.getLocation().getDistanceFrom(location) < radius)
+					if (story.getLocation().getDistanceFrom(location) < radius && 
+							(maxDuration == null || story.getDuration().compareTo(maxDuration) < 0))
 						filteredStories.add(story);
 				}
 				

@@ -3,15 +3,18 @@
 GET root
 
 * Creates new stories
-#storyID1:@id=POST root/stories?name=otaStory1&location=60.184884;24.834061
-#storyID2:@id=POST root/stories?name=otaStory2&location=60.185140;24.826165
-#storyID3:@id=POST root/stories?name=hesaStory1&location=60.170456;24.941264
+#storyID1:@id=POST root/stories?name=otaStory1&location=60.184884;24.834061&duration=34:12
+#storyID2:@id=POST root/stories?name=otaStory2&location=60.185140;24.826165&duration=15:03
+#storyID3:@id=POST root/stories?name=hesaStory1&location=60.170456;24.941264&duration=1:12:01
 
 * Finds out the stories near otaniemi
 GET root/stories/filtered/*?location=60.184884;24.834061
 
 * Finds out the stories on a larger scale
 GET root/stories/filtered?location=60.184884;24.834061&radius=100000
+
+* Finds out the shorter stories
+GET root/stories/filtered?location=60.184884;24.834061&radius=100000&maxDuration=30:00
 
 * Deletes the created stories
 DELETE root/stories/#storyID1

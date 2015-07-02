@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cos_db.CoSDatabaseTable;
+import cos_util.Duration;
 import cos_util.Location;
+import flow_recording.ObjectFormatException;
 import nexus_http.HttpException;
+import nexus_http.InvalidParametersException;
 import nexus_http.MethodNotSupportedException;
 import nexus_http.MethodType;
 import nexus_http.NotFoundException;
@@ -84,13 +87,36 @@ public class StoryEntity extends DatabaseEntity
 		return new Location(getAttributes().get("location"));
 	}
 	
+	/**
+	 * @return The duration of the story
+	 */
+	public Duration getDuration()
+	{
+		return new Duration(getAttributes().get("duration"));
+	}
+	
 	
 	// OTHER METHODS	-------------------------
 	
-	private static Map<String, String> modifyParameters(Map<String, String> parameters)
+	private static Map<String, String> modifyParameters(Map<String, String> parameters) throws 
+			InvalidParametersException
 	{	
 		// Adds parameter(s)
 		parameters.put("created", new SimpleDate().toString());
+		
+		// Parses the duration to test it
+		if (parameters.containsKey("duration"))
+		{
+			try
+			{
+				parameters.put("duration", 
+						new Duration(parameters.get("duration")).toString());
+			}
+			catch (ObjectFormatException e)
+			{
+				throw new InvalidParametersException(e.getMessage());
+			}
+		}
 		
 		return parameters;
 	}

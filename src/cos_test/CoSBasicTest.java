@@ -22,21 +22,26 @@ public class CoSBasicTest
 	
 	/**
 	 * Starts the test
-	 * @param args ip and port (optional, default = 7778)
+	 * @param args ip, port (optional, default = 7778), fileName 
+	 * (optional, default = testInstructions.txt)
 	 */
 	public static void main(String[] args)
 	{
 		if (args.length < 1)
 		{
-			System.out.println("Please provide the correct arguments: ip and port "
-					+ "(optional, default = 7778)");
+			System.out.println("Please provide the correct arguments: ip, port "
+					+ "(optional, default = 7778) and fileName "
+					+ "(optional, default = testInstructions.txt)");
 			System.exit(0);
 		}
 		
 		int port = 7778;
 		if (args.length > 1)
-			port = Integer.parseInt(args[2]);
+			port = Integer.parseInt(args[1]);
+		String fileName = "testInstructions.txt";
+		if (args.length > 2)
+			fileName = args[2];
 		
-		FileReaderClientTest.run("testInstructions.txt", args[0], port, ContentType.JSON, true);
+		FileReaderClientTest.run(fileName, args[0], port, ContentType.JSON, true);
 	}
 }

@@ -9,7 +9,8 @@ CREATE TABLE stories1
 	name 		varchar(32) 	NOT NULL,
 	created 	varchar(32) 	NOT NULL,
 	location 	varchar(32) 	NOT NULL,
-	fileName 	varchar(64) 	NOT NULL
+	fileName 	varchar(64) 	NOT NULL,
+	duration 	varchar(32) 	NOT NULL
 );
 
 

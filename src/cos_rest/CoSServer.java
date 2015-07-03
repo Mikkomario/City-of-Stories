@@ -4,6 +4,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import cos_db.CoSLoginKeyTable;
+import alliance_authorization.LoginKeyRemovalTask;
+import alliance_util.MaintenanceTimer;
 import alliance_util.SimpleDate;
 import vault_database.DatabaseSettings;
 import vault_database.DatabaseUnavailableException;
@@ -83,13 +86,18 @@ public class CoSServer
 		
 		// Creates the entities
 		Map<String, String> rootStats = new HashMap<>();
-		rootStats.put("version", "0.0.2");
+		rootStats.put("version", "1.1.0");
 		rootStats.put("started", new SimpleDate().toString());
 		rootStats.put("author", "Mikko Hilpinen");
 		RestEntity root = new ImmutableRestEntity("root", null, rootStats);
 		
+		new CoSLoginManager(root);
 		new StoriesList(root);
 		new UsersList(root);
+		
+		// Adds maintenance tasks
+		MaintenanceTimer maintenance = new MaintenanceTimer();
+		maintenance.addTask(new LoginKeyRemovalTask(CoSLoginKeyTable.DEFAULT, 24));
 		
 		// Starts the server
 		StaticRestServer.startServer(args[0], port, true, ContentType.JSON, root, 

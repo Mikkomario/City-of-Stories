@@ -4,9 +4,9 @@ Jackson Core 2.5.0
 HttpCore 4.3.2
 MariaDB Java Client 1.1.7
 
-Utopia Genesis 1.282
+Utopia Genesis 1.2.9.2
 Utopia Flow 1.422
 Utopia Tempest 1.0
-Utopia Vault 1.04
-Utopia Nexus 1.2.1.2
-Utopia Alliance 1.11
+Utopia Vault 1.1.0.1
+Utopia Nexus 1.2.1.3
+Utopia Alliance 1.1.2.0

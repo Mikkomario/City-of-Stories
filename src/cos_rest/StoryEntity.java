@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cos_db.CoSDatabaseTable;
+import cos_db.CoSLoginKeyTable;
 import cos_util.Duration;
 import cos_util.Location;
 import flow_recording.ObjectFormatException;
@@ -82,6 +83,15 @@ public class StoryEntity extends DatabaseEntity
 		throw new NotFoundException(getPath() + "/" + pathPart);
 	}
 	
+	@Override
+	protected void prepareDelete(Map<String, String> parameters)
+			throws HttpException
+	{
+		// Deletion requires authorization
+		CoSLoginKeyTable.authorize(getCreator().getDatabaseID(), parameters);
+		super.prepareDelete(parameters);
+	}
+	
 	
 	// GETTERS & SETTERS	---------------------
 
@@ -116,6 +126,13 @@ public class StoryEntity extends DatabaseEntity
 	private static Map<String, String> modifyParameters(Map<String, String> parameters) throws 
 			HttpException
 	{	
+		// Tests the user validity and authorization
+		if (!parameters.containsKey("creatorID"))
+		{
+			UserEntity creator = new UserEntity(parameters.get("creatorID"));
+			CoSLoginKeyTable.authorize(creator.getDatabaseID(), parameters);
+		}
+		
 		// Adds parameter(s)
 		parameters.put("created", new SimpleDate().toString());
 		
@@ -132,12 +149,6 @@ public class StoryEntity extends DatabaseEntity
 				throw new InvalidParametersException(e.getMessage());
 			}
 		}
-		
-		// Tests the user validity
-		if (parameters.containsKey("creatorID"))
-			new UserEntity(parameters.get("creatorID"));
-		
-		// TODO: Also test the authorization
 		
 		return parameters;
 	}

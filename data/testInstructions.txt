@@ -6,10 +6,14 @@ GET root
 #userID1:@id=POST root/users?userName=testUser1&password=test&email=asd1@wasd
 #userID2:@id=POST root/users?userName=testUser2&password=test&email=asd2@wasd
 
+* Logs in with the users
+#key1:userKey=GET root/login/#userID1/userKey?password=test
+#key2:userKey=GET root/login/#userID2/userKey?password=test
+
 * Creates new stories
-#storyID1:@id=POST root/stories?name=otaStory1&location=60.184884;24.834061&duration=34:12&creatorID=#userID1
-#storyID2:@id=POST root/stories?name=otaStory2&location=60.185140;24.826165&duration=15:03&creatorID=#userID1
-#storyID3:@id=POST root/stories?name=hesaStory1&location=60.170456;24.941264&duration=1:12:01&creatorID=#userID2
+#storyID1:@id=POST root/stories?name=otaStory1&location=60.184884;24.834061&duration=34:12&creatorID=#userID1&userKey=#key1
+#storyID2:@id=POST root/stories?name=otaStory2&location=60.185140;24.826165&duration=15:03&creatorID=#userID1&userKey=#key1
+#storyID3:@id=POST root/stories?name=hesaStory1&location=60.170456;24.941264&duration=1:12:01&creatorID=#userID2&userKey=#key2
 
 * Finds out the stories near otaniemi
 GET root/stories/filtered/*?location=60.184884;24.834061
@@ -24,6 +28,10 @@ GET root/stories/filtered?location=60.184884;24.834061&radius=100000&maxDuration
 GET root/stories/filtered?location=60.184884;24.834061&radius=100000&creatorName=testUser2
 
 * Deletes the created stories
-DELETE root/stories/#storyID1
-DELETE root/stories/#storyID2
-DELETE root/stories/#storyID3
+DELETE root/stories/#storyID1?userKey=#key1
+DELETE root/stories/#storyID2?userKey=#key1
+DELETE root/stories/#storyID3?userKey=#key2
+
+* Logs out
+DELETE root/login/#userID1?userKey=#key1
+DELETE root/login/#userID2?userKey=#key2

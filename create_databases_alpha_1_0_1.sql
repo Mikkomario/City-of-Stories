@@ -9,6 +9,13 @@ CREATE TABLE users1
 	userName 	varchar(62) 	NOT NULL
 );
 
+CREATE TABLE loginkeys1
+(
+	userID 		bigint 			NOT NULL PRIMARY KEY,
+	userKey 	varchar(62) 	NOT NULL,
+	created 	varchar(32) 	NOT NULL
+);
+
 CREATE TABLE secure1
 (
 	userID 		bigint 			NOT NULL PRIMARY KEY,

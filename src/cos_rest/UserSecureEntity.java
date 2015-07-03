@@ -3,6 +3,7 @@ package cos_rest;
 import java.util.Map;
 
 import cos_db.CoSDatabaseTable;
+import cos_db.CoSLoginKeyTable;
 import nexus_http.HttpException;
 import alliance_authorization.SecureEntity;
 
@@ -44,6 +45,6 @@ public class UserSecureEntity extends SecureEntity
 	@Override
 	protected void authorizeModification(Map<String, String> parameters) throws HttpException
 	{
-		// TODO: Authorize
+		CoSLoginKeyTable.authorize(getAttributes().get("userID"), parameters);
 	}
 }

@@ -18,7 +18,15 @@ public enum CoSDatabaseTable implements DatabaseTable
 	/**
 	 * This table holds basic story data
 	 */
-	STORIES;
+	STORIES,
+	/**
+	 * This table holds basic user data
+	 */
+	USERS,
+	/**
+	 * This table holds secured user data
+	 */
+	SECURE;
 	
 	
 	// ATTRIBUTES	------------------------------------

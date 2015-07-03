@@ -66,13 +66,19 @@ public class StoryEntity extends DatabaseEntity
 	protected Map<String, RestEntity> getMissingEntities(
 			Map<String, String> parameters) throws HttpException
 	{
-		return new HashMap<>();
+		Map<String, RestEntity> links = new HashMap<>();
+		links.put("creator", getCreator());
+		
+		return links;
 	}
 
 	@Override
 	protected RestEntity getMissingEntity(String pathPart,
 			Map<String, String> parameters) throws HttpException
 	{
+		if (pathPart.equalsIgnoreCase("creator"))
+			return getCreator();
+		
 		throw new NotFoundException(getPath() + "/" + pathPart);
 	}
 	
@@ -95,11 +101,20 @@ public class StoryEntity extends DatabaseEntity
 		return new Duration(getAttributes().get("duration"));
 	}
 	
+	/**
+	 * @return The user that created this story
+	 * @throws HttpException If the user couldn't be found
+	 */
+	public UserEntity getCreator() throws HttpException
+	{
+		return new UserEntity(getAttributes().get("creatorID"));
+	}
+	
 	
 	// OTHER METHODS	-------------------------
 	
 	private static Map<String, String> modifyParameters(Map<String, String> parameters) throws 
-			InvalidParametersException
+			HttpException
 	{	
 		// Adds parameter(s)
 		parameters.put("created", new SimpleDate().toString());
@@ -117,6 +132,12 @@ public class StoryEntity extends DatabaseEntity
 				throw new InvalidParametersException(e.getMessage());
 			}
 		}
+		
+		// Tests the user validity
+		if (parameters.containsKey("creatorID"))
+			new UserEntity(parameters.get("creatorID"));
+		
+		// TODO: Also test the authorization
 		
 		return parameters;
 	}

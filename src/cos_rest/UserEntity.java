@@ -93,6 +93,24 @@ public class UserEntity extends DatabaseEntity
 		return links;
 	}
 	
+	@Override
+	protected void prepareDelete(Map<String, String> parameters)
+			throws HttpException
+	{
+		throw new MethodNotSupportedException(MethodType.DELETE);
+	}
+	
+	
+	// GETTERS & SETTERS	-------------------
+	
+	/**
+	 * @return The userName of this user
+	 */
+	public String getUserName()
+	{
+		return getAttributes().get("userName");
+	}
+	
 	
 	// OTHER METHODS	-----------------------
 	

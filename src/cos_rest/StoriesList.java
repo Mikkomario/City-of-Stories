@@ -154,6 +154,9 @@ public class StoriesList extends DatabaseTableEntity
 				Duration maxDuration = null;
 				if (this.parameters.containsKey("maxDuration"))
 					maxDuration = new Duration(this.parameters.get("maxDuration"));
+				String creatorName = null;
+				if (this.parameters.containsKey("creatorName"))
+					creatorName = this.parameters.get("creatorName");
 				
 				// Goes through the stories and filters them
 				List<StoryEntity> filteredStories = new ArrayList<>();
@@ -161,7 +164,10 @@ public class StoriesList extends DatabaseTableEntity
 				{
 					StoryEntity story = new StoryEntity(storyID);
 					if (story.getLocation().getDistanceFrom(location) < radius && 
-							(maxDuration == null || story.getDuration().compareTo(maxDuration) < 0))
+							(maxDuration == null || 
+							story.getDuration().compareTo(maxDuration) < 0) && 
+							(creatorName == null || 
+							story.getCreator().getUserName().equals(creatorName)))
 						filteredStories.add(story);
 				}
 				

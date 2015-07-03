@@ -89,6 +89,7 @@ public class CoSServer
 		RestEntity root = new ImmutableRestEntity("root", null, rootStats);
 		
 		new StoriesList(root);
+		new UsersList(root);
 		
 		// Starts the server
 		StaticRestServer.startServer(args[0], port, true, ContentType.JSON, root, 

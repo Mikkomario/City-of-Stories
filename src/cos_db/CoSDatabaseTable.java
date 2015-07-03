@@ -45,7 +45,10 @@ public enum CoSDatabaseTable implements DatabaseTable
 	@Override
 	public String getDatabaseName()
 	{
-		return "cos_stories_db";
+		if (this == STORIES)
+			return "cos_stories_db";
+		else
+			return "cos_users_db";
 	}
 
 	@Override
@@ -57,7 +60,7 @@ public enum CoSDatabaseTable implements DatabaseTable
 	@Override
 	public boolean usesAutoIncrementIndexing()
 	{
-		return true;
+		return DatabaseTable.findPrimaryColumnInfo(getColumnInfo()).usesAutoIncrementIndexing();
 	}
 
 	@Override

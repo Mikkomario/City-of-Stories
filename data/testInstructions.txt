@@ -2,10 +2,14 @@
 
 GET root
 
+* Creates two new users
+#userID1:@id=POST root/users?userName=testUser1&password=test&email=asd1@wasd
+#userID2:@id=POST root/users?userName=testUser2&password=test&email=asd2@wasd
+
 * Creates new stories
-#storyID1:@id=POST root/stories?name=otaStory1&location=60.184884;24.834061&duration=34:12
-#storyID2:@id=POST root/stories?name=otaStory2&location=60.185140;24.826165&duration=15:03
-#storyID3:@id=POST root/stories?name=hesaStory1&location=60.170456;24.941264&duration=1:12:01
+#storyID1:@id=POST root/stories?name=otaStory1&location=60.184884;24.834061&duration=34:12&creatorID=#userID1
+#storyID2:@id=POST root/stories?name=otaStory2&location=60.185140;24.826165&duration=15:03&creatorID=#userID1
+#storyID3:@id=POST root/stories?name=hesaStory1&location=60.170456;24.941264&duration=1:12:01&creatorID=#userID2
 
 * Finds out the stories near otaniemi
 GET root/stories/filtered/*?location=60.184884;24.834061
@@ -15,6 +19,9 @@ GET root/stories/filtered?location=60.184884;24.834061&radius=100000
 
 * Finds out the shorter stories
 GET root/stories/filtered?location=60.184884;24.834061&radius=100000&maxDuration=30:00
+
+* Finds the story created by testUser2
+GET root/stories/filtered?location=60.184884;24.834061&radius=100000&creatorName=testUser2
 
 * Deletes the created stories
 DELETE root/stories/#storyID1
